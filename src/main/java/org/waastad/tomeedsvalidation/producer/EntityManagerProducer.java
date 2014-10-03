@@ -7,25 +7,23 @@ package org.waastad.tomeedsvalidation.producer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Default;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 
 /**
  *
  * @author Helge Waastad <helge.waastad@waastad.org>
  */
-@ApplicationScoped
+//@ApplicationScoped
 public class EntityManagerProducer {
 
     @Produces
     public EntityManager createEntityManager(EntityManagerFactory entityManagerFactory) {
         System.out.println("Producing entitymanager.....");
-        return (EntityManager) JtaEntityManagerProxy.newInstance(entityManagerFactory.createEntityManager());
+        return entityManagerFactory.createEntityManager();
     }
 
     public void close(@Disposes EntityManager entityManager) {
@@ -34,5 +32,21 @@ public class EntityManagerProducer {
             entityManager.close();
         }
     }
+//    @PersistenceContext(unitName = "ValidationPU")
+//    private EntityManager entityManager;
+//
+//    @Produces
+//    @RequestScoped
+//    protected EntityManager createEntityManager() {
+//        System.out.println("Producing entitymanager.....");
+//        return this.entityManager;
+//    }
+//
+//    protected void closeEntityManager(@Disposes EntityManager entityManager) {
+//        System.out.println("Disposing entitymanager......");
+//        if (entityManager.isOpen()) {
+//            entityManager.close();
+//        }
+//    }
 
 }

@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.validation.constraints.NotNull;
 import org.waastad.tomeedsvalidation.entity.validation.UniqueName;
 
 /**
@@ -32,7 +33,8 @@ public class Customer implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 255, unique = false)
+    @NotNull
+    @Column(name = "name", nullable = false, length = 255, unique = true)
     @UniqueName
     private String name;
 

@@ -11,6 +11,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.openejb.junit.jee.EJBContainerRule;
 import org.apache.openejb.junit.jee.InjectRule;
 import org.apache.openejb.junit.jee.config.PropertyFile;
@@ -28,43 +29,46 @@ import org.waastad.tomeedsvalidation.repository.CustomerRepository;
 @PropertyFile("test-lab-hsql.properties")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerTest {
-
+    
     @ClassRule
     public static final EJBContainerRule CONTAINER_RULE = new EJBContainerRule();
     @Rule
     public final InjectRule injectRule = new InjectRule(this, CONTAINER_RULE);
-
+    
     @Inject
     private CustomerRepository customerRepository;
-
+    
     @EJB
     private Caller transactionCaller;
-
+    
     public CustomerTest() {
     }
-
+    
     @Test
     public void testSomeMethod() throws Exception {
         Customer c = new Customer("name");
         Customer c2 = new Customer("name");
         customerRepository.save(c);
-        customerRepository.save(c2);
-
+        try {
+            customerRepository.save(c2);
+        } catch (Exception e) {
+            System.out.println(ExceptionUtils.getRootCauseMessage(e));
+        }      
     }
-
+    
     public static interface Caller {
-
+        
         public <V> V call(Callable<V> callable) throws Exception;
     }
-
+    
     @Stateless
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public static class TransactionITBean implements Caller {
-
+        
         @Override
         public <V> V call(Callable<V> callable) throws Exception {
             return callable.call();
         }
     }
-
+    
 }

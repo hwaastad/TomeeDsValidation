@@ -19,7 +19,7 @@ import javax.validation.Payload;
  */
 @Documented
 @Constraint(validatedBy = UniqueNameValidator.class)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueName {
 
