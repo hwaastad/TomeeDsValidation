@@ -12,6 +12,7 @@ import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 
 /**
@@ -21,38 +22,17 @@ import javax.persistence.PersistenceUnit;
 @ApplicationScoped
 public class EntityManagerProducer {
 
-    @PersistenceUnit
-    private EntityManagerFactory entityManagerFactory;
-
     @Produces
-    @Default
-    @RequestScoped
-    public EntityManager create() {
-    System.out.println("Producing entitymanager");
-        return this.entityManagerFactory.createEntityManager();
+    public EntityManager createEntityManager(EntityManagerFactory entityManagerFactory) {
+        System.out.println("Producing entitymanager.....");
+        return (EntityManager) JtaEntityManagerProxy.newInstance(entityManagerFactory.createEntityManager());
     }
 
-    public void dispose(@Disposes @Default EntityManager entityManager) {
+    public void close(@Disposes EntityManager entityManager) {
         if (entityManager.isOpen()) {
-    System.out.println("Disposing entitymanager");
+            System.out.println("Disposing entitymanager......");
             entityManager.close();
         }
     }
-//    @PersistenceContext
-//    private EntityManager entityManager;
-//
-//    @Produces
-//    @RequestScoped
-//    protected EntityManager createEntityManager() {
-//        System.out.println("Producing entitymanager");
-//        return this.entityManager;
-//    }
-//
-//    protected void closeEntityManager(@Disposes EntityManager entityManager) {
-//        if (entityManager.isOpen()) {
-//            System.out.println("Disposing entitymanager");
-//            entityManager.close();
-//        }
-//    }
 
 }

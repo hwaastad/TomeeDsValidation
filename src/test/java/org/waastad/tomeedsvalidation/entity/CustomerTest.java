@@ -5,12 +5,16 @@
  */
 package org.waastad.tomeedsvalidation.entity;
 
+import java.util.concurrent.Callable;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import org.apache.openejb.junit.jee.EJBContainerRule;
 import org.apache.openejb.junit.jee.InjectRule;
 import org.apache.openejb.junit.jee.config.PropertyFile;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
@@ -33,13 +37,34 @@ public class CustomerTest {
     @Inject
     private CustomerRepository customerRepository;
 
+    @EJB
+    private Caller transactionCaller;
+
     public CustomerTest() {
     }
 
     @Test
-    public void testSomeMethod() {
+    public void testSomeMethod() throws Exception {
         Customer c = new Customer("name");
+        Customer c2 = new Customer("name");
         customerRepository.save(c);
+        customerRepository.save(c2);
+
+    }
+
+    public static interface Caller {
+
+        public <V> V call(Callable<V> callable) throws Exception;
+    }
+
+    @Stateless
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public static class TransactionITBean implements Caller {
+
+        @Override
+        public <V> V call(Callable<V> callable) throws Exception {
+            return callable.call();
+        }
     }
 
 }

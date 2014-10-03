@@ -32,7 +32,7 @@ public class Customer implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, length = 255, unique = true)
+    @Column(name = "name", nullable = false, length = 255, unique = false)
     @UniqueName
     private String name;
 

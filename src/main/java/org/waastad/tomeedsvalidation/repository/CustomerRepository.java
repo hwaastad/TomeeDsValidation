@@ -18,8 +18,12 @@ import org.waastad.tomeedsvalidation.entity.Customer;
  */
 @Repository
 public abstract class CustomerRepository extends AbstractEntityRepository<Customer, Long> {
-
+    
     @Query(named = Customer.FIND_BY_NAME)
     public abstract List<Customer> findByName(@QueryParam("name") String name);
-
+    
+    public void saveJpa(Customer customer) {
+        this.entityManager().persist(customer);
+    }
+    
 }
