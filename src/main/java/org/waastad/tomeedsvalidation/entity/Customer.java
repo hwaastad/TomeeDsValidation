@@ -6,12 +6,18 @@
 package org.waastad.tomeedsvalidation.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
@@ -37,6 +43,12 @@ public class Customer implements Serializable {
     @Column(name = "name", nullable = false, length = 255, unique = true)
     @UniqueName
     private String name;
+
+    @JoinTable(name = "customer_person", joinColumns = {
+        @JoinColumn(name = "customerId", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "personId", referencedColumnName = "id")})
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private Collection<Person> personCollection;
 
     public Customer() {
     }
@@ -67,10 +79,7 @@ public class Customer implements Serializable {
             return false;
         }
         Customer other = (Customer) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
@@ -84,6 +93,17 @@ public class Customer implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Collection<Person> getPersonCollection() {
+        if (personCollection == null) {
+            personCollection = new ArrayList<>();
+        }
+        return personCollection;
+    }
+
+    public void setPersonCollection(Collection<Person> personCollection) {
+        this.personCollection = personCollection;
     }
 
 }

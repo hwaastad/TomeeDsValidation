@@ -15,12 +15,15 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.openejb.junit.jee.EJBContainerRule;
 import org.apache.openejb.junit.jee.InjectRule;
 import org.apache.openejb.junit.jee.config.PropertyFile;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.runners.MethodSorters;
+import org.waastad.tomeedsvalidation.ejb.BusinessBean;
 import org.waastad.tomeedsvalidation.repository.CustomerRepository;
+import org.waastad.tomeedsvalidation.repository.PersonRepository;
 
 /**
  *
@@ -29,46 +32,68 @@ import org.waastad.tomeedsvalidation.repository.CustomerRepository;
 @PropertyFile("test-lab-hsql.properties")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerTest {
-    
+
     @ClassRule
     public static final EJBContainerRule CONTAINER_RULE = new EJBContainerRule();
     @Rule
     public final InjectRule injectRule = new InjectRule(this, CONTAINER_RULE);
-    
+
     @Inject
     private CustomerRepository customerRepository;
-    
+    @Inject
+    private PersonRepository personRepository;
+    @Inject
+    private BusinessBean businessBean;
+
     @EJB
     private Caller transactionCaller;
-    
+
     public CustomerTest() {
     }
-    
+
     @Test
-    public void testSomeMethod() throws Exception {
+    public void test10() throws Exception {
         Customer c = new Customer("name");
-        Customer c2 = new Customer("name");
-        customerRepository.save(c);
         try {
-            customerRepository.save(c2);
+            customerRepository.save(c);
+            fail("Should fail on missing transaction....");
         } catch (Exception e) {
             System.out.println(ExceptionUtils.getRootCauseMessage(e));
-        }      
+        }
     }
-    
+
+    @Test
+    public void test11() throws Exception {
+        transactionCaller.call(new Callable<Object>() {
+
+            @Override
+            public Object call() throws Exception {
+                Customer c = new Customer("name2");
+                customerRepository.save(c);
+                return null;
+            }
+        });
+    }
+
+    @Test
+    public void test12() throws Exception {
+        Customer c = new Customer("name3");
+        businessBean.save(c);
+    }
+
     public static interface Caller {
-        
+
         public <V> V call(Callable<V> callable) throws Exception;
     }
-    
+
     @Stateless
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public static class TransactionITBean implements Caller {
-        
+
         @Override
         public <V> V call(Callable<V> callable) throws Exception {
             return callable.call();
         }
     }
-    
+
 }

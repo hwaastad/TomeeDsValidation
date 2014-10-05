@@ -6,17 +6,21 @@
 package org.waastad.tomeedsvalidation.repository;
 
 import java.util.List;
+import javax.persistence.FlushModeType;
 import org.apache.deltaspike.data.api.AbstractEntityRepository;
+import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.QueryParam;
 import org.apache.deltaspike.data.api.Repository;
 import org.waastad.tomeedsvalidation.entity.Customer;
+import org.waastad.tomeedsvalidation.producer.CrmEntityManagerResolver;
 
 /**
  *
  * @author Helge Waastad <helge.waastad@waastad.org>
  */
 @Repository
+@EntityManagerConfig(entityManagerResolver = CrmEntityManagerResolver.class,flushMode = FlushModeType.COMMIT)
 public abstract class CustomerRepository extends AbstractEntityRepository<Customer, Long> {
     
     @Query(named = Customer.FIND_BY_NAME)

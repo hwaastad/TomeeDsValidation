@@ -4,12 +4,10 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>ValidationDS</jta-data-source>
     <class>org.waastad.tomeedsvalidation.entity.Customer</class>
+    <class>org.waastad.tomeedsvalidation.entity.Person</class>
     <properties>
-    <!--  <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/dda2"/>
-      <property name="javax.persistence.jdbc.password" value="satest"/>
-      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
-      <property name="javax.persistence.jdbc.user" value="satest"/>
-      <property name="javax.persistence.schema-generation.database.action" value="create"/>-->
+        <property name="eclipselink.cache.query-results" value="true"/>
+        <property name="persistence-context.flush-mode" value="commit"/>
     </properties>
   </persistence-unit>
 </persistence>
