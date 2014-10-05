@@ -9,24 +9,35 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import org.waastad.tomeedsvalidation.entity.validation.UniquePersonName;
 
 /**
  *
  * @author Helge Waastad <helge.waastad@datametrix.no>
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = Person.FIND_BY_NAME, query = "SELECT t FROM Person t WHERE t.name=:name")
+})
 public class Person implements Serializable {
+
+    public static final String FIND_BY_NAME = "Person.FindByName";
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Basic(optional = false)
+    @Column(name = "name", unique = true)
+    @UniquePersonName
     private String name;
     @ManyToMany(mappedBy = "personCollection")
     private Collection<Customer> customerCollection;

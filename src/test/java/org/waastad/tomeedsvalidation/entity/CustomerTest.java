@@ -19,6 +19,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.runners.MethodSorters;
 import org.waastad.tomeedsvalidation.ejb.BusinessBean;
@@ -50,6 +51,9 @@ public class CustomerTest {
 
     public CustomerTest() {
     }
+    
+    private static final String CUSTOMER_NAME="tewrtwet";
+    private static final String PERSON_NAME="fswfsadaf";
 
     @Test
     public void test10() throws Exception {
@@ -80,12 +84,22 @@ public class CustomerTest {
         Customer c = new Customer("name3");
         businessBean.save(c);
     }
-    
+
     @Test
-    public void test13() throws Exception {        
+    public void test13() throws Exception {
         customerRepository.getAllCustomers();
         // Just verify no db access on this one since caching is by default in persistence.xml
         customerRepository.getAllCustomers();
+    }
+
+    @Test
+    @Ignore
+    public void test14() throws Exception {
+        Customer c = new Customer(CUSTOMER_NAME);
+        businessBean.save(c);
+        Person p = new Person(PERSON_NAME);
+        businessBean.savePerson(p);
+        businessBean.addPersonToCustomer(CUSTOMER_NAME, PERSON_NAME);
     }
 
     public static interface Caller {

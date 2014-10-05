@@ -20,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import org.waastad.tomeedsvalidation.entity.validation.UniqueName;
 
@@ -45,7 +46,6 @@ public class Customer implements Serializable {
     @Column(name = "name", nullable = false, length = 255, unique = true)
     @UniqueName
     private String name;
-
     @JoinTable(name = "customer_person", joinColumns = {
         @JoinColumn(name = "customerId", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "personId", referencedColumnName = "id")})
@@ -65,6 +65,13 @@ public class Customer implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void addPersonToCustomer(Person person) {
+        if (!getPersonCollection().contains(person)) {
+            getPersonCollection().add(person);
+            person.getCustomerCollection().add(this);
+        }
     }
 
     @Override

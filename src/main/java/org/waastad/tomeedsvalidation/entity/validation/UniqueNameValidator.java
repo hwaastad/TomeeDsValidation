@@ -8,7 +8,6 @@ package org.waastad.tomeedsvalidation.entity.validation;
 import javax.inject.Inject;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.apache.commons.collections.CollectionUtils;
 import org.waastad.tomeedsvalidation.repository.CustomerRepository;
 
 /**
@@ -25,7 +24,7 @@ public class UniqueNameValidator implements ConstraintValidator<UniqueName, Stri
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-        return CollectionUtils.isEmpty(customerRepository.findByName(value));
+    public boolean isValid(final String value, final ConstraintValidatorContext context) {
+        return customerRepository.findByName(value) == null;
     }
 }

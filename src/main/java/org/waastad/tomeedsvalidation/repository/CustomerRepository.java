@@ -12,7 +12,9 @@ import org.apache.deltaspike.data.api.EntityManagerConfig;
 import org.apache.deltaspike.data.api.Query;
 import org.apache.deltaspike.data.api.QueryParam;
 import org.apache.deltaspike.data.api.Repository;
+import org.apache.deltaspike.data.api.SingleResultType;
 import org.waastad.tomeedsvalidation.entity.Customer;
+import org.waastad.tomeedsvalidation.entity.Person;
 import org.waastad.tomeedsvalidation.producer.CrmEntityManagerResolver;
 
 /**
@@ -23,8 +25,8 @@ import org.waastad.tomeedsvalidation.producer.CrmEntityManagerResolver;
 @EntityManagerConfig(entityManagerResolver = CrmEntityManagerResolver.class, flushMode = FlushModeType.COMMIT)
 public abstract class CustomerRepository extends AbstractEntityRepository<Customer, Long> {
 
-    @Query(named = Customer.FIND_BY_NAME)
-    public abstract List<Customer> findByName(@QueryParam("name") String name);
+    @Query(named = Customer.FIND_BY_NAME,singleResult = SingleResultType.ANY)
+    public abstract Customer findByName(@QueryParam("name") String name);
 
     @Query(named = Customer.FIND_ALL)
     public abstract List<Customer> getAllCustomers();
