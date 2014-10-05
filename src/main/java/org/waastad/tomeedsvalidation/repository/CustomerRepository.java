@@ -20,14 +20,17 @@ import org.waastad.tomeedsvalidation.producer.CrmEntityManagerResolver;
  * @author Helge Waastad <helge.waastad@waastad.org>
  */
 @Repository
-@EntityManagerConfig(entityManagerResolver = CrmEntityManagerResolver.class,flushMode = FlushModeType.COMMIT)
+@EntityManagerConfig(entityManagerResolver = CrmEntityManagerResolver.class, flushMode = FlushModeType.COMMIT)
 public abstract class CustomerRepository extends AbstractEntityRepository<Customer, Long> {
-    
+
     @Query(named = Customer.FIND_BY_NAME)
     public abstract List<Customer> findByName(@QueryParam("name") String name);
-    
+
+    @Query(named = Customer.FIND_ALL)
+    public abstract List<Customer> getAllCustomers();
+
     public void saveJpa(Customer customer) {
         this.entityManager().persist(customer);
     }
-    
+
 }

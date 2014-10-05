@@ -80,6 +80,13 @@ public class CustomerTest {
         Customer c = new Customer("name3");
         businessBean.save(c);
     }
+    
+    @Test
+    public void test13() throws Exception {        
+        customerRepository.getAllCustomers();
+        // Just verify no db access on this one since caching is by default in persistence.xml
+        customerRepository.getAllCustomers();
+    }
 
     public static interface Caller {
 

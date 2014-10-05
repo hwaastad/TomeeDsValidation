@@ -29,11 +29,13 @@ import org.waastad.tomeedsvalidation.entity.validation.UniqueName;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = Customer.FIND_BY_NAME, query = "SELECT t FROM Customer t WHERE t.name=:name")
+    @NamedQuery(name = Customer.FIND_BY_NAME, query = "SELECT t FROM Customer t WHERE t.name=:name"),
+    @NamedQuery(name = Customer.FIND_ALL, query = "SELECT t FROM Customer t")
 })
 public class Customer implements Serializable {
 
     public static final String FIND_BY_NAME = "Customer.FindByName";
+    public static final String FIND_ALL = "Customer.FindAll";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
